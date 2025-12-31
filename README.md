@@ -12,8 +12,8 @@ Docker 없이 **Windows 로컬 + venv**만으로 “소켓/HTTP”를 처음부�
 PowerShell에서 프로젝트 루트:
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate
 python -m pip install -U pip
 pip install -r requirements.txt
 ```
