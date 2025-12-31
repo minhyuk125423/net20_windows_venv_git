@@ -7,7 +7,7 @@ from urllib.parse import urlparse, parse_qs
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--url", default="https://example.com:443/path?a=1&b=2")
+    ap.add_argument("--url", default="https://www.opensanctions.org/search/?q=kim")
     args = ap.parse_args()
 
     u = urlparse(args.url)
