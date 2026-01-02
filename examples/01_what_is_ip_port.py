@@ -8,7 +8,7 @@ import argparse, socket
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="example.com")
+    ap.add_argument("--host", default="google.co.kr")
     args = ap.parse_args()
 
     ip = socket.gethostbyname(args.host)
