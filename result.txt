@@ -1,9 +1,9 @@
 url	host	port	ok	latency_ms	error
-https://www.naver.com	www.naver.com	443	True	21	
-https://www.google.com	www.google.com	443	True	47	
-https://www.youtube.com	www.youtube.com	443	True	46	
-https://www.github.com	www.github.com	443	True	31	
-https://www.abc1111111.com	www.abc1111111.com	443	False	7	[Errno 11001] getaddrinfo failed
-https://www.notion.so	www.notion.so	443	True	21	
+https://www.naver.com	www.naver.com	443	True	9	
+https://www.google.com	www.google.com	443	True	46	
+https://www.youtube.com	www.youtube.com	443	True	49	
+https://www.github.com	www.github.com	443	True	15	
+https://www.abc1111111.com	www.abc1111111.com	443	False	0	[Errno 11001] getaddrinfo failed
+https://www.notion.so	www.notion.so	443	True	31	
 openai.com	openai.com	443	True	15	
-www.abc1111122.com	www.abc1111122.com	443	False	1	[Errno 11001] getaddrinfo failed
+www.abc1111122.com	www.abc1111122.com	443	False	0	[Errno 11001] getaddrinfo failed

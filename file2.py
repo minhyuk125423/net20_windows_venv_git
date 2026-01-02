@@ -61,6 +61,21 @@ def parse_host_port(url: str, default_port: int) -> tuple[str, int]:
 
     return host, int(port)
 
+def add_url(file_path):
+    new_url = input("추가할 URL 입력: ")
+    with open(file_path, "a", encoding="utf-8") as f:
+        f.write(new_url + "\n")
+    print("추가 완료")
+
+def delete_url(file_path):
+    del_url = input("삭제할 URL 입력: ")
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    with open(file_path, "w", encoding="utf-8") as f:
+        for line in lines:
+            if line.strip() != del_url:
+                f.write(line)
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -93,16 +108,45 @@ def main():
                 f"{url}\t{host}\t{port}\t{res.get('ok')}\t{res.get('latency_ms')}\t{res.get('error', '')}\n"
             )
 
-    print(f"\n{total}줄 확인, 정상={ok_cnt}개, 에러={total-ok_cnt}개")
+    print(f"\n총 {total}줄 확인, 정상={ok_cnt}개, 에러={total-ok_cnt}개")
     print(f"saved: {args.outfile}\n")
 
-    print("=== OK URLs ===")
+    print("=== 정상 URLs ===")
     for u in ok_urls:
         print(u)
 
-    print("\n=== FAIL URLs ===")
+    print("\n=== 오류 URLs ===")
     for u in fail_urls:
         print(u)
 
+def CRUD():
+    while True:
+        print("----------------------")
+        print("무엇을 실행하시겠습니까?\n")
+        print("1: URL 추가\n")
+        print("2: URL 삭제\n")
+        print("3: End\n")
+        print("----------------------")
+
+        inpt = input("Enter choice: ")
+        if inpt.isdigit():            
+            if inpt == "1":
+                new_url = input("추가할 URL을 입력하세요: ")
+                print("URL이 추가되었습니다.")
+            elif inpt == "2":
+                del_url = input("삭제할 URL을 입력하세요: ")
+                print("URL이 삭제되었습니다.")
+            elif inpt == "3":
+                print("프로그램을 종료합니다")
+                break
+            else:
+                print("\n1, 2, 3 중에서만 입력 가능합니다")
+        else:
+            print("\n1, 2, 3 중에서만 입력 가능합니다")
+
 if __name__ == "__main__":
     main()
+    CRUD()
+
+# if __name__ == "__main__":
+#     main()
