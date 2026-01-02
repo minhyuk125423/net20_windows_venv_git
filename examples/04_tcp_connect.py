@@ -23,3 +23,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#return 받는 포맷 = JSON 포맷
