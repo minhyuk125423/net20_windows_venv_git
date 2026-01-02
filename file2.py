@@ -8,6 +8,9 @@ import socket
 import time
 from urllib.parse import urlparse
 
+IN_FILE = "cleaned_sites.txt"
+OUT_FILE = "result.txt"
+
 
 def tcp_connect(host: str, port: int, timeout: float) -> dict:
     t0 = time.time()
@@ -105,18 +108,22 @@ def main():
             out.write(
                 f"{url}\t{host}\t{port}\t{res.get('ok')}\t{res.get('latency_ms')}\t{res.get('error', '')}\n"
             )
+    while True:
+        print(f"\n총 {total}줄 확인, 정상={ok_cnt}개, 에러={total-ok_cnt}개")
+        print(f"saved: {args.outfile}\n")
 
-    print(f"\n총 {total}줄 확인, 정상={ok_cnt}개, 에러={total-ok_cnt}개")
-    print(f"saved: {args.outfile}\n")
+        print("=== 정상 URLs ===")
+        for u in ok_urls:
+            print(u)
 
-    print("=== 정상 URLs ===")
-    for u in ok_urls:
-        print(u)
+        print("\n=== 오류 URLs ===")
+        for u in fail_urls:
+            print(u)
 
-    print("\n=== 오류 URLs ===")
-    for u in fail_urls:
-        print(u)
-    CRUD(args.infile)
+        ac = CRUD(IN_FILE)
+
+        if ac == "EXIT":
+            break
 
 def CRUD(url_path: str):
     while True:
@@ -139,11 +146,14 @@ def CRUD(url_path: str):
                 return "CONTINUE"
             elif inpt == "3":
                 print("프로그램을 종료합니다")
-                return
+                return "EXIT"
             else:
                 print("\n1, 2, 3 중에서만 입력 가능합니다")
+                return "CONTINUE"
         else:
             print("\n1, 2, 3 중에서만 입력 가능합니다")
+            return "CONTINUE"
 
 if __name__ == "__main__":
     main()
+    CRUD()
