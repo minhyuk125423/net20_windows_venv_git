@@ -1,7 +1,10 @@
 """
 04) TCP 접속 테스트: cleaned_sites.txt의 URL 목록을 읽어서 포트 오픈 여부 확인 후 result.txt로 저장
 """
-#실행 전에 터미널(CMD) 등에 pip install pyinstaller 명령어 입력
+#exe 파일 실행방법
+# 1.실행 전에 터미널(CMD) 등에 pip install pyinstaller 명령어 입력
+# 2. pyinstaller --onefile tcp_check.py
+
 from __future__ import annotations
 
 import argparse
@@ -20,7 +23,7 @@ def tcp_connect(host: str, port: int, timeout: float) -> dict:
     except Exception as e:
         return {"ok": False, "latency_ms": int((time.time() - t0) * 1000), "error": str(e)}
 
-
+# URL 파일 읽기 : 주석과 빈줄은 무시
 def iter_urls(path: str, encoding: str):
     with open(path, "r", encoding=encoding) as f:
         for line in f:
@@ -64,11 +67,13 @@ def parse_host_port(url: str, default_port: int) -> tuple[str, int]:
 
     return host, int(port)
 
+# URL 추가
 def add_url(url_path: str, new_url: str):
     with open(url_path, "a", encoding="utf-8") as f:
         f.write(new_url.strip() + "\n")
     print(f"URL이 추가되었습니다.")
 
+# URL 삭제
 def delete_url(url_path: str, del_url: str):
     with open(url_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -78,6 +83,7 @@ def delete_url(url_path: str, del_url: str):
                 f.write(line)
     print(f"URL이 삭제되었습니다.")
 
+# URL 리스트 불러오기
 def load_urls(path: str, encoding: str) -> list[str]:
     urls = []
     with open(path, "r", encoding=encoding) as f:
@@ -87,15 +93,18 @@ def load_urls(path: str, encoding: str) -> list[str]:
                 urls.append(s)
     return urls
 
+# URL 체크 : TCP 연결 시도 및 결과 기록
 def check(infile, outfile, timeout, default_port, encoding):
     total = 0
     ok_cnt = 0
     ok_urls = []
     fail_urls = []
 
+    # 결과 파일
     with open(outfile, "w", encoding="utf-8", newline="\n") as out:
         out.write("url\thost\tport\tok\tlatency_ms\terror\n")
 
+        # 파일 내 URL 반복
         for url in iter_urls(infile, encoding):
             total += 1
             host, port = parse_host_port(url, default_port)
@@ -104,7 +113,7 @@ def check(infile, outfile, timeout, default_port, encoding):
             else:
                 res = tcp_connect(host, port, timeout)
 
-
+        # 오류 구분
             if res.get("ok"):
                 ok_cnt += 1
                 ok_urls.append(url)
