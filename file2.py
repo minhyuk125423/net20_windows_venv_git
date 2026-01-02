@@ -83,7 +83,7 @@ def main():
     ap.add_argument("--default-port", type=int, default=443, help="scheme 판단 불가시 사용할 기본 포트")
     ap.add_argument("--encoding", default="utf-8", help="입력 파일 인코딩(예: utf-8, cp949)")
     args = ap.parse_args()
-
+    
     total = 0
     ok_cnt = 0
     ok_urls = []
@@ -116,6 +116,7 @@ def main():
     print("\n=== 오류 URLs ===")
     for u in fail_urls:
         print(u)
+    CRUD(args.infile)
 
 def CRUD(url_path: str):
     while True:
@@ -131,14 +132,14 @@ def CRUD(url_path: str):
             if inpt == "1":
                 new_url = input("추가할 URL을 입력하세요: ").strip()
                 add_url(url_path, new_url)
-                
+                return "CONTINUE"
             elif inpt == "2":
                 del_url = input("삭제할 URL을 입력하세요: ").strip()
                 delete_url(url_path, del_url)
-                
+                return "CONTINUE"
             elif inpt == "3":
                 print("프로그램을 종료합니다")
-                break
+                return
             else:
                 print("\n1, 2, 3 중에서만 입력 가능합니다")
         else:
@@ -146,7 +147,3 @@ def CRUD(url_path: str):
 
 if __name__ == "__main__":
     main()
-    CRUD()
-
-# if __name__ == "__main__":
-#     main()
