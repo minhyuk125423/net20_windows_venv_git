@@ -1,6 +1,7 @@
 """
 04) TCP 접속 테스트: cleaned_sites.txt의 URL 목록을 읽어서 포트 오픈 여부 확인 후 result.txt로 저장
 """
+#실행 전에 터미널(CMD) 등에 pip install pyinstaller 명령어 입력
 from __future__ import annotations
 
 import argparse
