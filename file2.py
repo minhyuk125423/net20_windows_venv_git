@@ -11,7 +11,6 @@ from urllib.parse import urlparse
 IN_FILE = "cleaned_sites.txt"
 OUT_FILE = "result.txt"
 
-
 def tcp_connect(host: str, port: int, timeout: float) -> dict:
     t0 = time.time()
     try:
@@ -78,27 +77,32 @@ def delete_url(url_path: str, del_url: str):
                 f.write(line)
     print(f"URL이 삭제되었습니다.")
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--infile", default="cleaned_sites.txt")
-    ap.add_argument("--outfile", default="result.txt")
-    ap.add_argument("--timeout", type=float, default=1.5)
-    ap.add_argument("--default-port", type=int, default=443, help="scheme 판단 불가시 사용할 기본 포트")
-    ap.add_argument("--encoding", default="utf-8", help="입력 파일 인코딩(예: utf-8, cp949)")
-    args = ap.parse_args()
-    
+def load_urls(path: str, encoding: str) -> list[str]:
+    urls = []
+    with open(path, "r", encoding=encoding) as f:
+        for line in f:
+            s = line.strip()
+            if s and not s.startswith("#"):
+                urls.append(s)
+    return urls
+
+def check(infile, outfile, timeout, default_port, encoding):
     total = 0
     ok_cnt = 0
     ok_urls = []
     fail_urls = []
 
-    with open(args.outfile, "w", encoding="utf-8", newline="\n") as out:
+    with open(outfile, "w", encoding="utf-8", newline="\n") as out:
         out.write("url\thost\tport\tok\tlatency_ms\terror\n")
 
-        for url in iter_urls(args.infile, args.encoding):
+        for url in iter_urls(infile, encoding):
             total += 1
-            host, port = parse_host_port(url, args.default_port)
-            res = tcp_connect(host, port, args.timeout)
+            host, port = parse_host_port(url, default_port)
+            if not host or not isinstance(port, int):
+                res = {"ok": False, "latency_ms": 0, "error": "Invalid host/port"}
+            else:
+                res = tcp_connect(host, port, timeout)
+
 
             if res.get("ok"):
                 ok_cnt += 1
@@ -108,52 +112,77 @@ def main():
             out.write(
                 f"{url}\t{host}\t{port}\t{res.get('ok')}\t{res.get('latency_ms')}\t{res.get('error', '')}\n"
             )
+    return total, ok_cnt, ok_urls, fail_urls
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--infile", default="IN_FILE")
+    ap.add_argument("--outfile", default="OUT_FILE")
+    ap.add_argument("--timeout", type=float, default=1.5)
+    ap.add_argument("--default-port", type=int, default=443, help="scheme 판단 불가시 사용할 기본 포트")
+    ap.add_argument("--encoding", default="utf-8", help="입력 파일 인코딩(예: utf-8, cp949)")
+    args = ap.parse_args()
+    
+    total, ok_cnt, ok_urls, fail_urls = check(
+            args.infile,
+            args.outfile,
+            args.timeout,
+            args.default_port,
+            args.encoding,
+        )
+    
     while True:
         print(f"\n총 {total}줄 확인, 정상={ok_cnt}개, 에러={total-ok_cnt}개")
         print(f"saved: {args.outfile}\n")
 
-        print("=== 정상 URLs ===")
+        print("=== 정상 URL 목록 ===")
         for u in ok_urls:
             print(u)
 
-        print("\n=== 오류 URLs ===")
+        print("\n=== 오류 URL 목록 ===")
         for u in fail_urls:
             print(u)
-
-        ac = CRUD(IN_FILE)
-
+             
+        ac = CRUD(args.infile)
         if ac == "EXIT":
             break
+        elif ac == "CONTINUE":
+            total, ok_cnt, ok_urls, fail_urls = check(
+            args.infile,
+            args.outfile,
+            args.timeout,
+            args.default_port,
+            args.encoding,
+        )
+    
 
 def CRUD(url_path: str):
-    while True:
-        print("----------------------")
-        print("무엇을 실행하시겠습니까?\n")
-        print("1: URL 추가\n")
-        print("2: URL 삭제\n")
-        print("3: End\n")
-        print("----------------------")
+    print("----------------------")
+    print("무엇을 실행하시겠습니까?\n")
+    print("1: URL 추가\n")
+    print("2: URL 삭제\n")
+    print("3: End\n")
+    print("----------------------")
 
-        inpt = input("Enter choice: ").strip()
-        if inpt.isdigit():            
-            if inpt == "1":
-                new_url = input("추가할 URL을 입력하세요: ").strip()
-                add_url(url_path, new_url)
-                return "CONTINUE"
-            elif inpt == "2":
-                del_url = input("삭제할 URL을 입력하세요: ").strip()
-                delete_url(url_path, del_url)
-                return "CONTINUE"
-            elif inpt == "3":
-                print("프로그램을 종료합니다")
-                return "EXIT"
-            else:
-                print("\n1, 2, 3 중에서만 입력 가능합니다")
-                return "CONTINUE"
+    inpt = input("Enter choice: ").strip()
+    if inpt.isdigit():            
+        if inpt == "1":
+            new_url = input("추가할 URL을 입력하세요: ").strip()
+            add_url(url_path, new_url)
+            return "CONTINUE"
+        elif inpt == "2":
+            del_url = input("삭제할 URL을 입력하세요: ").strip()
+            delete_url(url_path, del_url)
+            return "CONTINUE"
+        elif inpt == "3":
+            print("프로그램을 종료합니다")
+            return "EXIT"
         else:
             print("\n1, 2, 3 중에서만 입력 가능합니다")
             return "CONTINUE"
+    else:
+        print("\n1, 2, 3 중에서만 입력 가능합니다")
+        return "CONTINUE"
 
 if __name__ == "__main__":
     main()
-    CRUD()
