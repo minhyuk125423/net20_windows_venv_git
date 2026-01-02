@@ -1,0 +1,10 @@
+url	host	port	ok	latency_ms	error
+https://www.naver.com	www.naver.com	443	True	15	
+https://www.google.com	www.google.com	443	True	43	
+https://www.youtube.com	www.youtube.com	443	True	49	
+https://www.github.com	www.github.com	443	True	15	
+https://www.notion.so	www.notion.so	443	True	15	
+openai.com	openai.com	443	True	15	
+www.abc1111122.com	www.abc1111122.com	443	False	31	[Errno 11001] getaddrinfo failed
+daum.net	daum.net	443	True	31	
+a	a	443	False	2258	[Errno 11001] getaddrinfo failed

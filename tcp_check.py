@@ -126,8 +126,8 @@ def check(infile, outfile, timeout, default_port, encoding):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--infile", default="IN_FILE")
-    ap.add_argument("--outfile", default="OUT_FILE")
+    ap.add_argument("--infile", default="cleaned_sites.txt")
+    ap.add_argument("--outfile", default="result.txt")
     ap.add_argument("--timeout", type=float, default=1.5)
     ap.add_argument("--default-port", type=int, default=443, help="scheme 판단 불가시 사용할 기본 포트")
     ap.add_argument("--encoding", default="utf-8", help="입력 파일 인코딩(예: utf-8, cp949)")
