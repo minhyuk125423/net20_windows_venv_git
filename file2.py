@@ -61,20 +61,19 @@ def parse_host_port(url: str, default_port: int) -> tuple[str, int]:
 
     return host, int(port)
 
-def add_url(file_path):
-    new_url = input("추가할 URL 입력: ")
-    with open(file_path, "a", encoding="utf-8") as f:
-        f.write(new_url + "\n")
-    print("추가 완료")
+def add_url(url_path: str, new_url: str):
+    with open(url_path, "a", encoding="utf-8") as f:
+        f.write(new_url.strip() + "\n")
+    print(f"URL이 추가되었습니다.")
 
-def delete_url(file_path):
-    del_url = input("삭제할 URL 입력: ")
-    with open(file_path, "r", encoding="utf-8") as f:
+def delete_url(url_path: str, del_url: str):
+    with open(url_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
-    with open(file_path, "w", encoding="utf-8") as f:
+    with open(url_path, "w", encoding="utf-8") as f:
         for line in lines:
-            if line.strip() != del_url:
+            if line.strip() != del_url.strip():
                 f.write(line)
+    print(f"URL이 삭제되었습니다.")
 
 
 def main():
@@ -132,10 +131,10 @@ def CRUD():
         if inpt.isdigit():            
             if inpt == "1":
                 new_url = input("추가할 URL을 입력하세요: ")
-                print("URL이 추가되었습니다.")
+                
             elif inpt == "2":
                 del_url = input("삭제할 URL을 입력하세요: ")
-                print("URL이 삭제되었습니다.")
+                
             elif inpt == "3":
                 print("프로그램을 종료합니다")
                 break
