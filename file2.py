@@ -75,7 +75,6 @@ def delete_url(url_path: str, del_url: str):
                 f.write(line)
     print(f"URL이 삭제되었습니다.")
 
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--infile", default="cleaned_sites.txt")
@@ -118,7 +117,7 @@ def main():
     for u in fail_urls:
         print(u)
 
-def CRUD():
+def CRUD(url_path: str):
     while True:
         print("----------------------")
         print("무엇을 실행하시겠습니까?\n")
@@ -127,13 +126,15 @@ def CRUD():
         print("3: End\n")
         print("----------------------")
 
-        inpt = input("Enter choice: ")
+        inpt = input("Enter choice: ").strip()
         if inpt.isdigit():            
             if inpt == "1":
-                new_url = input("추가할 URL을 입력하세요: ")
+                new_url = input("추가할 URL을 입력하세요: ").strip()
+                add_url(url_path, new_url)
                 
             elif inpt == "2":
-                del_url = input("삭제할 URL을 입력하세요: ")
+                del_url = input("삭제할 URL을 입력하세요: ").strip()
+                delete_url(url_path, del_url)
                 
             elif inpt == "3":
                 print("프로그램을 종료합니다")
